@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Chatbot WhatsApp Style</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #ccc;
+        border-radius: 6px;
+      }
+    </style>
+    <script>
+      const socket = io();
+      window.addEventListener("DOMContentLoaded", () => {
+        const form = document.querySelector("form");
+        const input = document.querySelector("#message");
+        const chat = document.querySelector("#chat");
+
+        form.addEventListener("submit", (e) => {
+          e.preventDefault();
+          const msg = input.value.trim();
+          if (!msg) return;
+          appendMessage("🧑", msg, "right", "bg-blue-500 text-white");
+          socket.emit("userMessage", msg);
+          input.value = "";
+          chat.scrollTop = chat.scrollHeight;
+        });
+
+        socket.on("botMessage", (msg) => {
+          appendMessage("🤖", msg, "left", "bg-gray-200 text-gray-900");
+          chat.scrollTop = chat.scrollHeight;
+        });
+
+        function appendMessage(icon, text, align, bubbleClass) {
+          const div = document.createElement("div");
+          div.className = `flex ${
+            align === "right" ? "justify-end" : "justify-start"
+          } mb-2`;
+          div.innerHTML = `
+            <div class="max-w-xs p-3 rounded-xl ${bubbleClass}">
+              <span class="block text-sm">${icon}: ${text}</span>
+            </div>
+          `;
+          chat.appendChild(div);
+        }
+      });
+    </script>
+  </head>
+  <body class="h-screen bg-gray-100 flex flex-col">
+    <!-- Header -->
+    <header
+      class="bg-green-600 text-white p-4 text-center font-semibold text-lg"
+    >
+      💬 Chatbot
+    </header>
+
+    <!-- Chat Area -->
+    <main class="flex-1 overflow-hidden">
+      <div
+        id="chat"
+        class="h-full overflow-y-auto px-4 py-2 space-y-1 flex flex-col"
+      ></div>
+    </main>
+
+    <!-- Input -->
+    <footer class="bg-white p-3 shadow-md">
+      <form class="flex gap-2">
+        <input
+          id="message"
+          type="text"
+          class="flex-1 border border-gray-300 rounded-full px-4 py-2 focus:outline-none focus:ring focus:ring-green-500"
+          placeholder="Ketik pesan..."
+        />
+        <button
+          type="submit"
+          class="bg-green-600 text-white px-4 py-2 rounded-full hover:bg-green-700"
+        >
+          Kirim
+        </button>
+      </form>
+    </footer>
+  </body>
+</html>
