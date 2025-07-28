@@ -40,7 +40,9 @@ chatbot-gemini/
 2. **Install dependensi**
    ```bash
    npm install
-4. **Jalankan Aplikasi**
+4. Buat .env
+   GEMINI_API_KEY=AIzaSyB63GL8xq8RCTUAm7kOaNI6YR_fOil-3C4
+6. **Jalankan Aplikasi**
    ```bash
    node app.js
 Made with ❤️ by Taufik Nurul Hidayat
